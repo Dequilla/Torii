@@ -34,7 +34,7 @@ set_target_properties( ${PROJ_NAME}
 )
 
 if(UNIX)
-    # TODO
+    add_definitions(-D__UNIX__)
 elseif(WIN32)
-    # TODO
+    add_definitions(-D__WIN32__)
 endif()
