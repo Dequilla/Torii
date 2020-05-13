@@ -14,6 +14,7 @@ void error(const char *msg)
 
 /*
     Based on: http://www.linuxhowtos.org/C_C++/socket.htm
+    Test with telnet: https://netbeez.net/blog/telnet-to-test-connectivity-to-tcp/
 */
 
 int main(int argc, char** argv)
