@@ -1,6 +1,9 @@
 #pragma once
 
 #include <netinet/in.h>
+#include <string>
+
+#define MAX_BUFFER_SIZE 256
 
 namespace tor 
 {
@@ -8,15 +11,16 @@ namespace tor
     class Socket 
     {
         short m_port = -1;
-        char* m_buffer[256];
-        int sockfd, newsockfd, resultLength;
-        socklen_t clilen;
-        sockaddr_in serv_addr, cli_addr;
+        int m_sockfd, m_newsockfd;
+        socklen_t m_clilen;
+        sockaddr_in m_serv_addr, m_cli_addr;
 
     public:
         Socket(short port);
 
-        void Listen();
+        void Accept();
+        std::string Read();
+        void Write(const std::string& msg);
     };
 
 }
