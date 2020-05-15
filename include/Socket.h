@@ -17,6 +17,7 @@ namespace tor
 
     public:
         Socket(short port);
+        ~Socket();
 
         void Accept();
         std::string Read();

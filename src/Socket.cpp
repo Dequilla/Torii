@@ -34,6 +34,11 @@ namespace tor {
         listen(m_sockfd, 5);
     }
 
+    Socket::~Socket() {
+        close(m_newsockfd);
+        close(m_sockfd);
+    }
+
     void Socket::Accept() {
         // Accept requests
         m_clilen = sizeof(m_cli_addr);
@@ -49,8 +54,8 @@ namespace tor {
         
         int resultLength = read(m_newsockfd, buffer, MAX_BUFFER_SIZE - 1);
         buf.assign(buffer, resultLength);
-        
         if(resultLength < 0) throw BaseException("Could not read from socket.");
+
         return buf;
     }
 
@@ -58,5 +63,4 @@ namespace tor {
         int resultLength = write(m_newsockfd, &msg[0], msg.length());
         if (resultLength < 0) throw BaseException("Could not write to socket.");
     }
-
 }
