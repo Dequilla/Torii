@@ -1,4 +1,5 @@
 #include <Socket.h>
+#include <Http/HttpVersion.h>
 
 #include <string>
 #include <iostream>
@@ -10,6 +11,8 @@
 
 int main(int argc, char** argv)
 {
+    std::cout << "Version: " << tor::HttpVersion() << std::endl;
+
     tor::Socket socket(8080);
     socket.Accept();
 
