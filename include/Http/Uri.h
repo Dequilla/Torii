@@ -1,15 +1,20 @@
 #pragma once
+#include <cstdint>
 #include <Http/HttpComponent.h>
+#include <Http/Uri/Authority.h>
 
 namespace tor
 {
 
     class Uri : public HttpComponent
     {
-        tor::String m_originalUri;
+        Authority m_authority;
 
     public:
-        Uri(tor::String uri);
+        // https://en.wikipedia.org/wiki/Uniform_Resource_Identifier
+        Uri(tor::Authority authority, tor::String scheme = "http://");
+
+        //static Uri FromString(tor::String uriString);
 
         virtual tor::String ToString() const;
     };

@@ -1,5 +1,6 @@
 #pragma once
 #include <string>
+#include <vector>
 
 namespace tor 
 {
@@ -16,6 +17,8 @@ namespace tor
         operator std::string();
 
         std::string GetSource() const;
+
+        std::vector<tor::String> Split(char delimiter) const;
     };
 
 }

@@ -7,13 +7,13 @@
 #include <iostream>
 
 /*
-    Based on: http://www.linuxhowtos.org/C_C++/socket.htm
-    Test with telnet: https://netbeez.net/blog/telnet-to-test-connectivity-to-tcp/
+    Based on:           http://www.linuxhowtos.org/C_C++/socket.htm
+    Test with telnet:   https://netbeez.net/blog/telnet-to-test-connectivity-to-tcp/
 */
 
 int main(int argc, char** argv)
 {
-    std::cout << tor::HttpMethod() << " " << tor::Uri("/users") << " " << "HTTP/" << tor::HttpVersion() << std::endl;
+    //std::cout << tor::HttpMethod() << " " << tor::Uri("/users") << " " << "HTTP/" << tor::HttpVersion() << std::endl;
 
     tor::Socket socket(8080);
     socket.Accept();
