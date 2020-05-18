@@ -24,7 +24,7 @@ namespace tor
         Method m_method;
 
     public:
-        HttpMethod(Method method);
+        HttpMethod(Method method = HttpMethod::GET);
 
         virtual tor::String ToString() const;
     };
