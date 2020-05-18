@@ -9,6 +9,15 @@ namespace tor
 
     }
 
+    std::uint32_t HttpVersion::GetMajor() const
+    {
+        return m_major;
+    }
+
+    std::uint32_t HttpVersion::GetMinor() const
+    {
+        return m_minor;
+    }
 
     tor::String HttpVersion::ToString() const
     {
