@@ -1,6 +1,7 @@
 #pragma once
 
 #include <netinet/in.h>
+#include <cstdint>
 #include <string>
 
 #define MAX_BUFFER_SIZE 256
@@ -16,7 +17,7 @@ namespace tor
         sockaddr_in m_serv_addr, m_cli_addr;
 
     public:
-        Socket(short port);
+        Socket(std::uint16_t port);
         ~Socket();
 
         void Accept();

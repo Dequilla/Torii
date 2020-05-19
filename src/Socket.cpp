@@ -14,7 +14,7 @@
 
 namespace tor {
 
-    Socket::Socket(short port) 
+    Socket::Socket(std::uint16_t port) 
         : m_port(port) 
     {
 
