@@ -14,21 +14,21 @@ namespace tor
         tor::String uri;
 
         // Check user info
-        if(m_userInfo.GetSource().size() >= 0)
+        if(m_userInfo.GetSource().size() > 0)
         {
-            uri.GetSource()
+            uri = uri.GetSource()
                 .append(m_userInfo.GetSource())
                 .append("@");
         }
 
         // Add host / domain
-        uri.GetSource()
+        uri = uri.GetSource()
             .append(m_host.GetSource());
 
         // Add port if available
         if(m_port != 0)
         {
-            uri.GetSource()
+            uri = uri.GetSource()
                 .append(":")
                 .append(std::to_string(m_port));
         }
