@@ -1,5 +1,4 @@
 #pragma once
-#include <String.h>
 #include <Http/Server/HttpResponse.h>
 #include <Http/Server/HttpRequest.h>
 

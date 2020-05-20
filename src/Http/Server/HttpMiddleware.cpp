@@ -1,4 +1,4 @@
-#include <Http/Server/HttpMiddlerware.h>
+#include <Http/Server/HttpMiddleware.h>
 
 namespace tor
 {
