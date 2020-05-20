@@ -7,6 +7,7 @@
 #include <iostream>
 
 #include <Http/Uri.h>
+#include <Http/Server/HttpServer.h>
 
 /*
     Based on:           http://www.linuxhowtos.org/C_C++/socket.htm
@@ -19,6 +20,19 @@ int main(int argc, char** argv)
     std::cout << "Equal: " << (tor::Path("/user/:id/test/:function").Compare(tor::Path("/user/mbn2jsn2kjh3n2jh1/test/show")) ? "true" : "false") << std::endl;
     std::cout << tor::Path("/").ToString().GetSource().size() << std::endl;
 
+    tor::HttpServer server(8080);
+    
+    server.Use(
+        tor::Middleware(
+            [&](tor::HttpRequest request, tor::HttpResponse response)
+            {
+                return response;
+            }
+        ),
+        "/home",
+        "GET"
+    );
+
     tor::Socket socket(8080);
     socket.Accept();
 
@@ -26,6 +40,7 @@ int main(int argc, char** argv)
         std::string str = socket.Read();
         std::cout << "Recieved: " << str << std::endl;  
         socket.Write("HTTP/1.1 200 OK\nContent-Length: 21\nContent-Type: text/html\n\n<h1>Hello world!</h1>\n");
+        // WORKS WITH CURL COOL
     }
 
     return 0;

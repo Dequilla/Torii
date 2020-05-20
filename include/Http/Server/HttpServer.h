@@ -2,11 +2,12 @@
 #include <cstdint>
 
 #include <Socket.h>
+#include <Http/Server/HttpRouter.h>
 
 namespace tor 
 {
 
-    class HttpServer
+    class HttpServer : public HttpRouter
     {
         tor::Socket m_socket;
 
