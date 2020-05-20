@@ -52,6 +52,7 @@ namespace tor {
         char buffer[MAX_BUFFER_SIZE];
         bzero(buffer, MAX_BUFFER_SIZE);
         
+        // TODO: Read until no more to read? Change buffer? Know the size?
         int resultLength = read(m_newsockfd, buffer, MAX_BUFFER_SIZE - 1);
         buf.assign(buffer, resultLength);
         if(resultLength < 0) throw BaseException("Could not read from socket.");

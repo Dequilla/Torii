@@ -1,11 +1,16 @@
 #include <Http/Server/HttpRouter.h>
 
+#include <iostream>
+
 namespace tor
 {
 
     HttpResponse HttpRouter::callback(HttpRequest request, HttpResponse response)
     {
         // Do all the routing here
+        auto one = request.GetPath();
+        auto two = request.GetMethod();
+        auto three = request.GetVersion().ToString();
     }
 
     HttpRouter::HttpRouter()

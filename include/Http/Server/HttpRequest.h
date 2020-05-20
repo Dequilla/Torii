@@ -31,6 +31,11 @@ namespace tor
         */
 
     public:
+        std::string GetMethod() {return m_method;}
+        std::string GetPath() {return m_path;}
+        std::string GetHost() {return m_host;}
+        tor::HttpVersion GetVersion() {return m_httpVersion;}
+
         static HttpRequest FromString(std::string request);
     };
 

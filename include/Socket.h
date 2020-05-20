@@ -4,7 +4,7 @@
 #include <cstdint>
 #include <string>
 
-#define MAX_BUFFER_SIZE 256
+#define MAX_BUFFER_SIZE 1024
 
 namespace tor 
 {
