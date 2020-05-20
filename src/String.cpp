@@ -33,9 +33,9 @@ namespace tor
         return m_string;
     }
 
-    std::vector<tor::String> String::Split(char delimiter) const
+    std::vector<std::string> String::Split(char delimiter) const
     {
-        std::vector<tor::String> tokens;
+        std::vector<std::string> tokens;
         std::string token;
         std::istringstream tokenStream(m_string);
 

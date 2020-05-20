@@ -1,5 +1,5 @@
 #pragma once
-#include <Http/HttpComponent.h>
+#include <Http/Parsing/HttpComponent.h>
 
 namespace tor
 {
@@ -26,7 +26,7 @@ namespace tor
     public:
         HttpMethod(Method method = HttpMethod::GET);
 
-        virtual tor::String ToString() const;
+        virtual std::string ToString() const;
     };
 
 }

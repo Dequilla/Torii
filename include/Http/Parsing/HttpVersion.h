@@ -1,7 +1,7 @@
 #pragma once
 #include <cstdint>
 
-#include <Http/HttpComponent.h>
+#include <Http/Parsing/HttpComponent.h>
 
 namespace tor
 {
@@ -16,7 +16,7 @@ namespace tor
         std::uint32_t GetMajor() const;
         std::uint32_t GetMinor() const;
 
-        virtual tor::String ToString() const;
+        virtual std::string ToString() const;
     };
 
 }

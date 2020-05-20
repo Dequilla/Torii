@@ -1,9 +1,11 @@
-#include <Http/Uri/Path.h>
+#include <Http/Parsing/Uri/Path.h>
+
+#include <String.h>
 
 namespace tor
 {
 
-    Path::Path(tor::String path)
+    Path::Path(std::string path)
         : m_originalPath(path)
     {   
 
@@ -11,7 +13,7 @@ namespace tor
 
     void Path::Extract()
     {
-        m_pathComponents = m_originalPath.Split('/');
+        m_pathComponents = tor::String(m_originalPath).Split('/');
 
         m_isExctracted = true;
     }
@@ -28,15 +30,15 @@ namespace tor
         for(std::uint32_t index = 0; index < m_pathComponents.size(); index++)
         {
             // TODO: Check size of string (should 0 be allowed?)
-            tor::String local = m_pathComponents.at(index); 
-            tor::String other = otherPath.m_pathComponents.at(index);
+            std::string local = m_pathComponents.at(index); 
+            std::string other = otherPath.m_pathComponents.at(index);
 
             // They are the exact same (not same instance)
-            if(local.GetSource() == other.GetSource()) continue;
+            if(local == other) continue;
 
             // One is a placeholder (always match)
             // TODO: Make placeholders optional
-            if(local.GetSource().at(0) == ':' || other.GetSource().at(0) == ':') continue;
+            if(local.at(0) == ':' || other.at(0) == ':') continue;
 
             return false;
         }
@@ -44,7 +46,7 @@ namespace tor
         return true;
     }
 
-    tor::String Path::ToString() const
+    std::string Path::ToString() const
     {
         return m_originalPath;
     }

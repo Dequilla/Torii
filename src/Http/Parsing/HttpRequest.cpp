@@ -1,4 +1,4 @@
-#include <Http/HttpRequest.h>
+#include <Http/Parsing/HttpRequest.h>
 
 namespace tor
 {
@@ -9,7 +9,7 @@ namespace tor
         
     }
 
-    static HttpRequest FromString(tor::String requestString)
+    static HttpRequest FromString(std::string requestString)
     {
         // TODO: Implement parser
         return HttpRequest();

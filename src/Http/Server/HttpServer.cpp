@@ -24,6 +24,7 @@ namespace tor
             std::string str = m_socket.Read();
 
             // 2. Parse into HttpRequest
+            tor::HttpRequest request = tor::HttpRequest::FromString(str);
 
             // 3. Send into middleware chain and get HttpResonse
 

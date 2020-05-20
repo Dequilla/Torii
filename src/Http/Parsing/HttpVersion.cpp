@@ -1,4 +1,4 @@
-#include <Http/HttpVersion.h>
+#include <Http/Parsing/HttpVersion.h>
 
 namespace tor 
 {
@@ -19,13 +19,11 @@ namespace tor
         return m_minor;
     }
 
-    tor::String HttpVersion::ToString() const
+    std::string HttpVersion::ToString() const
     {
-        return tor::String(
-            std::to_string(m_major)
-                .append(".")
-                .append(std::to_string(m_minor))
-        );
+        return std::to_string(m_major)
+                    .append(".")
+                    .append(std::to_string(m_minor));
     }
 
 }

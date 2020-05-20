@@ -1,5 +1,5 @@
 #pragma once
-#include <String.h>
+#include <string>
 #include <ostream>
 
 namespace tor
@@ -8,9 +8,7 @@ namespace tor
     class HttpComponent
     {
     public:
-        virtual tor::String ToString() const = 0;
-
-        virtual std::string ToStdString() const;
+        virtual std::string ToString() const = 0;
     };
 
     std::ostream& operator<<(std::ostream& os, const tor::HttpComponent& obj);

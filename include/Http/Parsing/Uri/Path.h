@@ -1,8 +1,7 @@
 #pragma once
 #include <vector>
 
-#include <Http/HttpComponent.h>
-#include <String.h>
+#include <Http/Parsing/HttpComponent.h>
 
 namespace tor
 {
@@ -10,18 +9,18 @@ namespace tor
     class Path : public HttpComponent
     {
     protected:
-        tor::String m_originalPath;
-        std::vector<tor::String> m_pathComponents;
+        std::string m_originalPath;
+        std::vector<std::string> m_pathComponents;
         bool m_isExctracted = false;
 
         void Extract();
 
     public:
-        Path(tor::String path);
+        Path(std::string path);
 
         bool Compare(Path otherPath);
 
-        virtual tor::String ToString() const;
+        virtual std::string ToString() const;
     };  
 
 }

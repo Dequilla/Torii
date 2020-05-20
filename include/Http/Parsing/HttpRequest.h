@@ -1,6 +1,6 @@
 #pragma once 
-#include <Http/HttpMethod.h>
-#include <Http/HttpVersion.h>
+#include <Http/Parsing/HttpMethod.h>
+#include <Http/Parsing/HttpVersion.h>
 
 namespace tor 
 {
@@ -13,7 +13,7 @@ namespace tor
     public:
         HttpRequest(HttpMethod method = HttpMethod(), HttpVersion version = HttpVersion());
 
-        static HttpRequest FromString(tor::String requestString);
+        static HttpRequest FromString(std::string requestString);
     };
 
 }

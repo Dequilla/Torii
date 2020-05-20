@@ -18,7 +18,7 @@ namespace tor
 
         std::string GetSource() const;
 
-        std::vector<tor::String> Split(char delimiter) const;
+        std::vector<std::string> Split(char delimiter) const;
     };
 
 }
