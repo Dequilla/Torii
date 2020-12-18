@@ -1,30 +1,21 @@
-#include <Socket.h>
-#include <Http/HttpVersion.h>
-#include <Http/HttpMethod.h>
-#include <Http/Uri.h>
-
 #include <string>
 #include <iostream>
 
-#include <Http/Uri.h>
-
-/*
-    Based on:           http://www.linuxhowtos.org/C_C++/socket.htm
-    Test with telnet:   https://netbeez.net/blog/telnet-to-test-connectivity-to-tcp/
-*/
+#include "Socket.hpp"
 
 int main(int argc, char** argv)
 {
-    std::cout << tor::Uri(tor::Authority("localhost"), tor::Path("/user/1")) << std::endl;
+    torii::Socket socket(35000);
+    socket.listen();
 
-    tor::Socket socket(8080);
-    socket.Accept();
-
-    while(true) {
-        std::string str = socket.Read();
-        std::cout << "Recieved: " << str << std::endl;  
-        socket.Write("Recieved your message...");
-    }
-
-    return 0;
+	// Receive until the peer shuts down the connection
+	std::vector<torii::int8_t> recieved;
+	do {
+		torii::Connection connection = socket.accept();
+		recieved = connection.recieve();
+		for (auto chr : recieved) {
+			std::cout << chr;
+		}
+		std::cout << std::endl;
+	} while (recieved.size() > 0);
 }

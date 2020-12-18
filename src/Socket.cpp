@@ -1,66 +1,153 @@
-#include <Socket.h>
+#include "Socket.hpp"
 
-#include <Exception.h>
-#include <strings.h>
+#include <Exception.hpp>
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <unistd.h>
+torii::Connection::Connection(uint16_t port, SocketDescriptor clientSocket) 
+	: m_port(port), m_clientSocket(clientSocket) {
+	m_buffer.reserve(512);
+}
 
-#include <sys/types.h> 
-#include <sys/socket.h>
+torii::Connection::~Connection() {
+#ifdef _WIN32
+	closesocket(m_clientSocket);
+#endif;
+}
 
-#include <iostream>
+std::vector<torii::int8_t> torii::Connection::recieve() {
+	memset(&m_buffer[0], '\0', m_buffer.size());
 
-namespace tor {
+#ifdef _WIN32 
+	torii::int32_t recieved = 0;
+	recieved = recv(m_clientSocket, &m_buffer[0], 512, 0);
+	if (recieved >= 0) {
+		return m_buffer;
+	} else {
+		closesocket(m_clientSocket);
+		WSACleanup();
 
-    Socket::Socket(short port) 
-        : m_port(port) 
-    {
+		throw Exception(
+			std::string("Socket with port ")
+				.append(std::to_string(m_port))
+				.append(" could not recieve (recv)"),
+			__FILE__
+		);
+	}
+#endif
+}
 
-        m_sockfd = socket(AF_INET, SOCK_STREAM, 0);
-        if (m_sockfd < 0)
-            throw tor::BaseException("Could not open socket.");
-        
-        bzero((char *) &m_serv_addr, sizeof(m_serv_addr));
-        m_serv_addr.sin_family = AF_INET;
-        m_serv_addr.sin_port = htons(m_port);
-        m_serv_addr.sin_addr.s_addr = INADDR_ANY;
+torii::Socket::Socket(uint16_t port)
+	: m_port(port)
+{
+#ifdef _WIN32
+	WSADATA wsaData;
+	
+	// Initialize Winsock
+	int ec = WSAStartup(MAKEWORD(2, 2), &wsaData);
+	if (ec != 0) {
+		throw Exception(
+			std::string("Socket with port ")
+				.append(std::to_string(m_port))
+				.append(" failed to initialize WSAStartup, error code ")
+				.append(std::to_string(ec)),
+			__FILE__
+		);
+	}
 
-        if (bind(m_sockfd, (struct sockaddr *) &m_serv_addr, sizeof(m_serv_addr)) < 0)
-            throw tor::BaseException("Could not bind socket.");
+	// Setup before creating socket
+	addrinfo *result = nullptr, 
+			 *ptr = nullptr,
+			 hints;
 
-        // Listen to maximum of 5 connections in queue
-        listen(m_sockfd, 5);
-    }
+	ZeroMemory(&hints, sizeof(hints));
+	hints.ai_family = AF_INET;
+	hints.ai_socktype = SOCK_STREAM;
+	hints.ai_protocol = IPPROTO_TCP;
+	hints.ai_flags = AI_PASSIVE;
 
-    Socket::~Socket() {
-        close(m_newsockfd);
-        close(m_sockfd);
-    }
+	// Resolve the local address and port to be used by the server
+	ec = getaddrinfo(NULL, std::to_string(m_port).c_str(), &hints, &result);
+	if (ec != 0) {
+		throw Exception(
+			std::string("Socket with port ")
+				.append(std::to_string(m_port))
+				.append(" failed to getaddrinfo, error code ")
+				.append(std::to_string(ec)),
+			__FILE__
+		);
+	}
 
-    void Socket::Accept() {
-        // Accept requests
-        m_clilen = sizeof(m_cli_addr);
-        m_newsockfd = accept(m_sockfd, (struct sockaddr *) &m_cli_addr, &m_clilen);
-        if (m_newsockfd < 0)
-            throw BaseException("Could not accept request.");
-    }
+	m_socket = socket(result->ai_family, result->ai_socktype, result->ai_protocol);
+	if (m_socket == INVALID_SOCKET) {
+		freeaddrinfo(result);
 
-    std::string Socket::Read() {
-        std::string buf;
-        char buffer[MAX_BUFFER_SIZE];
-        bzero(buffer, MAX_BUFFER_SIZE);
-        
-        int resultLength = read(m_newsockfd, buffer, MAX_BUFFER_SIZE - 1);
-        buf.assign(buffer, resultLength);
-        if(resultLength < 0) throw BaseException("Could not read from socket.");
+		throw Exception(
+			std::string("Socket with port ")
+				.append(std::to_string(m_port))
+				.append(" failed to be created"),
+			__FILE__
+		);
+	}
 
-        return buf;
-    }
+	// Setup the TCP listening socket
+	ec = bind(m_socket, result->ai_addr, (int)result->ai_addrlen);
+	if (ec == SOCKET_ERROR) {
+		closesocket(m_socket);
+		freeaddrinfo(result);
+		
+		throw Exception(
+			std::string("Socket with port ")
+				.append(std::to_string(m_port))
+				.append(" failed to be bound"),
+			__FILE__
+		);
+	}
 
-    void Socket::Write(const std::string& msg) {
-        int resultLength = write(m_newsockfd, &msg[0], msg.length());
-        if (resultLength < 0) throw BaseException("Could not write to socket.");
-    }
+	freeaddrinfo(result);
+#endif
+}
+
+torii::Socket::~Socket() {
+#ifdef _WIN32
+	WSACleanup();
+#endif
+}
+
+void torii::Socket::listen() {
+#ifdef _WIN32
+	if (::listen(m_socket, SOMAXCONN) == SOCKET_ERROR) {
+		closesocket(m_socket);
+		WSACleanup();
+
+		throw Exception(
+			std::string("Socket with port ")
+				.append(std::to_string(m_port))
+				.append(" could not start listening"),
+			__FILE__
+		);
+	}
+#endif
+}
+
+torii::Connection torii::Socket::accept() {
+#ifdef _WIN32
+	// Accept a client socket
+	SocketDescriptor clientSocket = INVALID_SOCKET;
+	clientSocket = ::accept(m_socket, NULL, NULL);
+	if (clientSocket == INVALID_SOCKET) {
+		closesocket(m_socket);
+		WSACleanup();
+
+		throw Exception(
+			std::string("Socket with port ")
+				.append(std::to_string(m_port))
+				.append(" could not accept the client socket"),
+			__FILE__
+		);
+	}
+
+	return Connection(
+		m_port,
+		clientSocket
+	);
+#endif
 }
