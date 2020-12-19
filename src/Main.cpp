@@ -1,21 +1,29 @@
-#include <string>
 #include <iostream>
 
-#include "Socket.hpp"
+#include <TCPListener.hpp>
+#include <TCPSocket.hpp>
 
 int main(int argc, char** argv)
 {
-    torii::Socket socket(35000);
-    socket.listen();
+	torii::TCPListener listener;
+	if (listener.listen(35000) != torii::Socket::DONE) {
+		return -1;
+	}
 
-	// Receive until the peer shuts down the connection
-	std::vector<torii::int8_t> recieved;
+	torii::TCPSocket client;
+	if (listener.accept(client) != torii::Socket::DONE) {
+		return -1;
+	}
+
+	char buffer[512];
+	std::size_t size = 0;
 	do {
-		torii::Connection connection = socket.accept();
-		recieved = connection.recieve();
-		for (auto chr : recieved) {
-			std::cout << chr;
+		client.receive(buffer, 512, size);
+		if (size > 0) {
+			buffer[size - 2] = '\0';
+			buffer[size - 1] = '\t';
+			std::cout << "Recieved " << size << " number of bytes containing '" << std::string(buffer) << "'" << std::endl;
 		}
-		std::cout << std::endl;
-	} while (recieved.size() > 0);
+	} while (size != 0);
+
 }
