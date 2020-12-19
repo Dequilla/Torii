@@ -1,6 +1,9 @@
 # Export
 bin/
 build/
+out/
+.vs/
+.vscode/
 
 # C++
 

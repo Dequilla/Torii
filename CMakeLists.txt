@@ -11,14 +11,14 @@ file(GLOB_RECURSE SOURCES
     "${PROJECT_SOURCE_DIR}/*.c"
 )
 
-# specify the C++ standard
+# Specify the C++ standard
 set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
 
 # Setup project
 project(${PROJ_NAME} VERSION 1.0)
 
-# add the executable
+# Add the executable
 add_executable(${PROJ_NAME} ${SOURCES})
 target_include_directories(${PROJ_NAME} PUBLIC ${INC_DIR})
 
