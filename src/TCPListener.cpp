@@ -50,7 +50,7 @@ namespace torii {
         }
 
         sockaddr_in address;
-        int length = sizeof(address);
+        socklen_t length = sizeof(address);
         SocketHandle remote = ::accept(getSocketHandle(), reinterpret_cast<sockaddr*>(&address), &length);
 
         if (remote == priv::SocketImpl::invalidSocket())

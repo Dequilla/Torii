@@ -1,3 +1,4 @@
+#ifdef _WIN32
 #include "Windows/SocketImpl.hpp"
 
 #include <cstring>
@@ -55,3 +56,4 @@ namespace torii {
 
 	}
 }
+#endif
